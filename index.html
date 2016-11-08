@@ -145,10 +145,12 @@
       <section>
         <h3>Upring is a framework to&nbsp;<b>build</b></h3>
         <ul class="bullet">
-          <li>a Key Value store</li>
+          <li>a key value store</li>
           <li>a cache</li>
           <li>a pub/sub system</li>
           <li>real-time applications</li>
+          <li>a discovery system</li>
+          <li>a metadata store for microservices</li>
           <li>..or anything that requires distributed state!</li>
         </ul>
       </section>
@@ -336,7 +338,7 @@ server.listen(4200)
       <section>
         <h2>Starting upring</h2>
         <pre><code class="language-javascript">const upring = UpRing({
-  base: '127.0.0.1:7979',
+  base: ['127.0.0.1:7979'],
   logLevel: 'debug',
   hashring: {
     replicaPoints: 10,
@@ -350,7 +352,7 @@ server.listen(4200)
         <pre><code class="language-javascript">upring.add('ns:kv,cmd:put', function (req, reply) {
   db.set(req.key, req.value)
   /* the first argument is the error
-     the second one is the result *
+     the second one is the result */
   reply(null, { ok: true })
 })
 </code></pre>
