@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Scaling State</title>
+    <link rel="stylesheet" type="text/css" href="build/build.css">
+  </head>
+  <body>
+    <article>
+      <section data-bespoke-backdrop="black" class="trans">
+        <div style="text-align: left; margin-top: -2em; color: white">
+          <h1>Scaling State</h1>
+          <h3 style="color: white">by&nbsp;<a style="display:inline-block;margin-left: -.03em; color: white" href="http://twitter.com/matteocollina">@matteocollina</a></h3><br>
+          <div style="width: 50%; float: right; margin-bottom: -30em;"><a href="http://nearform.com"><img src="./images/nearform.svg"></a></div>
+        </div>
+      </section>
+      <section data-bespoke-backdrop="node-desktop" class="trans"></section>
+      <section>
+        <h2>MVC Architecture</h2><img src="images/arch-mvc.png" style="height: 90%">
+      </section>
+      <section data-bespoke-backdrop="monolith" class="trans"></section>
+      <section>
+        <h2>Modules Architecture</h2><img src="images/arch-modules.png" style="width: 90%">
+      </section>
+      <section>
+        <h2>Services Architecture</h2><img src="images/arch-services.png" style="height: 90%">
+      </section>
+      <section data-bespoke-backdrop="stonehenge" class="trans"></section>
+      <section>
+        <h2>Microservices Architecture</h2><img src="images/arch-microservices.png" style="width: 90%">
+      </section>
+      <section>
+        <h2>Microservices Characteristics</h2>
+        <ul class="bullet">
+          <li>small in size</li>
+          <li>communicate by messages</li>
+          <li>bounded by contexts</li>
+          <li>autonomously developed</li>
+          <li>independently deployable</li>
+          <li>decentralized</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Microservices are stateless</h2>
+      </section>
+      <section>
+        <!-- h2 Stateless Architecture--><img src="images/arch-generic.png" style="height: 90%">
+      </section>
+      <section>
+        <h2>Lifecyle</h2>
+        <ol>
+          <li>the load balancer receives request</li>
+          <li>the load balancer routes the request to<br><b>the least loaded server</b></li>
+          <li>the first server calls several microservices..</li>
+          <li>ideally load balancing so that the load is spread</li>
+          <li>each of them fetch some data from a database</li>
+          <li>each of them return the given data</li>
+        </ol>
+      </section>
+      <section><img src="images/loadbalacing.png" style="width: 90%"></section>
+      <section>
+        <h3>Every microservice must load the data</h3>
+        <h2>Any local caching is unfeasible<br>as the load is shared</h2>
+      </section>
+      <section><img src="./images/no-caching.png" style="width: 90%"></section>
+      <section><img src="./images/kaboom.gif"></section>
+      <section>
+        <h2 style="text-decoration: line-through;">Microservices are stateless</h2>
+      </section>
+      <section data-bespoke-backdrop="lamp" class="trans">
+        <h1 style="color: white; margin-left: -10%; margin-right: auto; width: 10%; text-align: left; padding-bottom: 5%">Idea</h1>
+      </section>
+      <section data-bespoke-backdrop="lamp" class="trans">
+        <h2 style="color: white; margin-left: auto; margin-right: 0%; width: 30%; text-align: right; padding-bottom: 5%">Let's write <u><i>stateful</i></u> services!</h2>
+      </section>
+      <section>
+        <h2>How do we know where the state lives?</h2>
+        <h3>Load balancing with round-robin works&nbsp;<b>against&nbsp;</b>us</h3>
+      </section>
+      <section>
+        <h2>Given a request referencing data X, we must always route it to peer Y.</h2>
+      </section>
+      <section><img src="./images/reqhashing.png" style="width: 90%"></section>
+      <section><img src="./images/reqhashing-with-gateway.png" style="width: 90%"></section>
+      <section>
+        <h2>How do we assign<br>users to servers?</h2>
+      </section>
+      <section>
+        <h2>Application-level Sharding</h2><img src="images/sharding.png" style="height: 90%">
+      </section>
+      <section>
+        <h2>What if the topology changes?</h2>
+      </section>
+      <section>
+        <h2><br>Every peer must know every other peer:<br>n * (n - 1) connections</h2>
+      </section>
+      <section>
+        <h2>Failure detection</h2><img src="./images/heartbeat.png" style="width: 90%">
+        <h2>by heartbeat</h2>
+      </section>
+      <section>
+        <h2>Every peer receives<br>n - 1 heartbeats in any interval</h2>
+      </section>
+      <section><img src="./images/unfeasible.gif"></section>
+      <section>
+        <h2>Seems unfeasible. Or not?</h2>
+      </section>
+      <section data-bespoke-backdrop="dragon-scroll" class="trans">
+        <h1 style="color: white; padding-top: 50%">Secret Sauce(s)</h1>
+      </section>
+      <section><img src="images/dynamodb.png" style="width: 90%"></section>
+      <section><img src="./images/dynamo-strategy-one.png" style="height: 90%"></section>
+      <section><img src="images/swim.png" style="width: 90%"></section>
+      <section>
+        <ul style="text-align: left; font-size: 3em" class="bullet">
+          <li><b style="color: red; font-style: italic;">S</b>calable</li>
+          <li><b style="color: red; font-style: italic;">W</b>eakly-Consistent</li>
+          <li><b style="color: red; font-style: italic;">I</b>nfection Style</li>
+          <li><b style="color: red; font-style: italic;">M</b>embership protocol</li>
+        </ul>
+      </section>
+      <section data-bespoke-backdrop="lamp" class="trans">
+        <h1 style="color: white; margin-left: -10%; margin-right: auto; width: 10%; text-align: left; padding-bottom: 5%">Idea</h1>
+      </section>
+      <section data-bespoke-backdrop="lamp" class="trans">
+        <h3 style="color: white; margin-left: auto; margin-right: 0%; width: 30%; text-align: right; padding-bottom: 5%">
+          Let's organize our peers in a <b>consistent hashring</b>,
+          using <b>SWIM</b> to detect failures
+        </h3>
+      </section>
+      <section data-bespoke-backdrop="magic" class="trans"></section>
+      <section><img src="images/upring.svg" style="width: 90%"></section>
+      <section><img src="images/hashring-sharding.png" style="height: 90%"></section>
+      <section><img src="images/control.png" style="height: 90%"></section>
+      <section>
+        <h2>DEMO</h2>
+      </section>
+      <section>
+        <h3><b>UpRing&nbsp;</b>is a building block for&nbsp;<b>distributed systems</b></h3>
+      </section>
+      <section>
+        <h3><b>UpRing&nbsp;</b>is a building block for&nbsp;<b>infrastructure</b></h3>
+      </section>
+      <section>
+        <h3>Upring is a framework to&nbsp;<b>build</b></h3>
+        <ul class="bullet">
+          <li>a Key Value store</li>
+          <li>a cache</li>
+          <li>a pub/sub system</li>
+          <li>real-time applications</li>
+          <li>..or anything that requires distributed state!</li>
+        </ul>
+      </section>
+      <section data-bespoke-backdrop="magic" class="trans"></section>
+      <section>
+        <h2>Links</h2>
+        <ul class="bullet">
+          <li><a href="https://github.com/mcollina/upring">https://github.com/mcollina/upring</a></li>
+          <li><a href="https://github.com/mcollina/upring-kv">https://github.com/mcollina/upring-kv</a></li>
+          <li><a href="https://github.com/mcollina/upring-control">https://github.com/mcollina/upring-control</a></li>
+          <li><a href="https://github.com/mcollina/upring-pubsub">
+              https://github.com/mcollina/upring-pubsub
+              </a></li>
+        </ul>
+      </section>
+      <section><img src="./images/penguins.gif"></section>
+      <section><img src="images/upring.svg" style="width: 30%"><br><br>
+        <h2>How to build a framework for building infrastructure components?</h2>
+      </section>
+      <section data-bespoke-backdrop="kay" class="transwhite"><br><br><br>
+        <p><i class="fa fa-quote-left">&nbsp;</i>The key in making great and growable systems is much more
+          to design how its modules communicate rather than what
+          their internal properties and behaviors should be.<i class="fa fa-quote-right">&nbsp;</i>- Alan Key, father of OOP
+        </p>
+        <div class="copyright">Image by Marcin Wichary&nbsp;<a href="http://creativecommons.org/licenses/by/3.0/deed.en_US"><img src="images/cc_attribution.png"></a></div>
+      </section>
+      <section>
+        <h2>What is a message?</h2>
+        <ul class="bullet">
+          <li>Maps</li>
+          <li>Arrays</li>
+          <li>Strings</li>
+          <li>Numbers</li>
+          <li>Binary data?</li>
+          <li>Streams of data?</li>
+        </ul>
+      </section>
+      <section>
+        <h2>The anatomy of a message</h2>
+        <pre><code class="language-javascript">{
+  person:  {
+    name: 'Matteo'
+    surname: 'Collina'
+  }
+}
+</code></pre>
+      </section>
+      <section>
+        <h2>The anatomy of a recipient</h2>
+        <pre><code class="language-javascript">recipient(message, function (err, result) {
+  console.log(err, result)
+})
+</code></pre>
+        <ul class="bullet">
+          <li>result is another message</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Node Callback Style</h2>
+        <ul class="bullet">
+          <li>async by default</li>
+          <li>no difference if wrapping a db, or a remote endpoint</li>
+          <li>Promises are ok as well :)</li>
+        </ul>
+      </section>
+      <section>
+        <h2>How to remote a function call?</h2>
+        <ul class="bullet">
+          <li>how do we encode which function to call?</li>
+          <li>truly multi transport from day zero</li>
+          <li>we can store it in the message!</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Final message</h2>
+        <pre><code class="language-javascript">{
+  role: 'person',
+  cmd: 'save'
+  person:  {
+    name: 'Matteo'
+    surname: 'Collina'
+  }
+}
+</code></pre>
+      </section>
+      <section><a href="http://github.com/mcollina/bloomrun"><img src="./images/bloomrun.png" style="width: 90%"></a></section>
+      <section>
+        <h2>Pattern Matching!</h2>
+        <pre><code data-bespoke-autorun class="language-javascript">var i = bloomrun()
+i.add({ cmd: 'save' }, function save (arg, cb) {
+  alert('saving ' + JSON.stringify(arg))
+  cb(null, true) })
+  
+var msg = {
+  cmd: 'save',
+  person: { name: 'matteo' } }
+i.lookup(msg)(msg, function (err, result) {
+  alert([err, result].join(' ')) })
+  </code></pre>
+      </section>
+      <section>
+        <h2>Transport: tentacoli</h2>
+        <ul class="bullet">
+          <li><a href="https://github.com/mcollina/tentacoli">https://github.com/mcollina/tentacoli</a></li>
+          <li>request/response for messages</li>
+          <li>support sending binary streams</li>
+          <li>support sending object streams</li>
+          <li>works on top any binary stream</li>
+        </ul>
+      </section>
+      <section>
+        <pre><code class="language-javascript">var stream = net.connect(4200)
+var instance = tentacoli()
+
+stream.pipe(instance).pipe(stream)
+
+instance.request({
+  cmd: 'somedata'
+}, function (err, res) {
+  console.log(err, res)
+})
+</code></pre>
+      </section>
+      <section>
+        <pre><code class="language-javascript">var server = net.createServer(function (stream) {
+  var instance = tentacoli()
+  stream.pipe(instance).pipe(stream)
+  stream.on('request', handle)
+})
+server.listen(4200)
+</code></pre>
+      </section>
+      <section>
+        <pre><code class="language-javascript">function handle (req, reply) {
+  console.log('--> request is', req.cmd)
+  reply(null, {
+    data: 'some data'
+  })
+}
+</code></pre>
+      </section>
+      <section>
+        <h2>Streams are a first level concern</h2>
+        <p>We can use them to receive live updates</p>
+        <pre><code class="language-javascript">instance.request({
+  cmd: 'a request',
+}, function (err, res) {
+  res.streams.on('data', console.log)
+}
+</code></pre>
+      </section>
+      <section>
+        <pre><code class="language-javascript">instance.request({
+  cmd: 'upload',
+  streams: {
+    file: fs.createReadStream(__filename)
+  }
+}, console.log)
+</code></pre>
+      </section>
+      <section>
+        <h2>Streams can also be in replies</h2>
+        <pre><code class="language-javascript">function handle (req, reply) {
+  console.log('--> request is', req.cmd)
+  reply(null, {
+    streams: {
+      file: fs.createReadStream(__filename)
+    }
+  })
+}
+</code></pre>
+      </section>
+      <section><img src="images/upring.svg" style="width: 90%"></section>
+      <section>
+        <h2>API</h2>
+        <ul class="bullet">
+          <li>starting upring</li>
+          <li>add some patterns</li>
+          <li>send requests</li>
+          <li>do live updates</li>
+          <li>events</li>
+          <li>track and replica</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Starting upring</h2>
+        <pre><code class="language-javascript">const upring = UpRing({
+  base: '127.0.0.1:7979',
+  logLevel: 'debug',
+  hashring: {
+    replicaPoints: 10,
+    joinTimeout: 200
+  }
+})
+</code></pre>
+      </section>
+      <section>
+        <h2>Adding patterns 1/2</h2>
+        <pre><code class="language-javascript">upring.add('ns:kv,cmd:put', function (req, reply) {
+  db.set(req.key, req.value)
+  /* the first argument is the error
+     the second one is the result *
+  reply(null, { ok: true })
+})
+</code></pre>
+      </section>
+      <section>
+        <h2>Send requests</h2>
+        <pre><code class="language-javascript">upring.request({
+  ns: 'kv',
+  cmd: 'get',
+  key: 'hello'
+}, console.log)
+</code></pre>
+      </section>
+      <section>
+        <h2>Do live updates 1/2</h2>
+        <pre><code class="language-javascript">upring.add('ns:kv,cmd:live', function (req, reply) {
+  const updates = new Readable({
+    objectMode: true,
+    read: () => {}
+  })
+  // call push whenever you want to send data
+  // se the full Readable API at nodejs.org
+  updates.push({ hello: 'world' })
+  reply(null, { streams: { updates } })
+})
+</code></pre>
+      </section>
+      <section>
+        <h2>Do live updates 2/2</h2>
+        <pre><code class="language-javascript">upring.request({
+  ns: 'kv',
+  cmd: 'get',
+  key: 'hello'
+}, function (err, res) {
+  res.streams.updates.on('data', console.log)
+})
+</code></pre>
+      </section>
+      <section>
+        <h2>Adding patterns 2/2</h2>
+        <pre><code class="language-javascript">upring.add('ns:kv,cmd:get', function (req, reply) {
+  /* the first argument is the error
+     the second one is the result */
+  reply(null, { value: db.get(req.key) })
+})
+</code></pre>
+      </section>
+      <section data-bespoke-backdrop="upring-events" class="trans"></section>
+      <section>
+        <h2>Track</h2>
+        <pre><code class="language-javascript">/* call upring.track(key) if you are responsible
+   for that key, i.e. if upring.allocatedToMe(key)
+   returns true */
+const tracker = upring.track(key, { replica: true })
+tracker.on('replica', function (peer) {
+  console.log('new replica', peer)
+})
+tracker.on('move', function (peer) {
+  console.log('moved to', peer)
+})
+</code></pre>
+      </section>
+      <section>
+        <h2>Replica</h2>
+        <pre><code class="language-javascript">/* call upring.replica(key, cb) if you are not responsible
+   for that key, i.e. if upring.allocatedToMe(key)
+   returns false */
+upring.replica(key, function () {
+  // now upring.allocateToMe(key) returns true
+})
+</code></pre>
+      </section>
+      <section>
+        <h3>UpRing helps you&nbsp;</h3>
+        <h2>Scaling State</h2>
+      </section>
+      <section>
+        <h2>This presentation</h2>
+        <ul class="bullet">
+          <li><a href="https://mcollina.github.io/scaling-state">https://mcollina.github.io/scaling-state</a></li>
+          <li><a href="https://github.com/mcollina/scaling-state">
+              https://github.com/mcollina/scaling-state
+              </a></li>
+        </ul>
+      </section>
+      <section><img src="images/matteo.png" style="width: 95%">
+        <h3><a href="http://github.com/mcollina">http://github.com/mcollina</a></h3>
+      </section>
+      <section>
+        <h1>Thanks!</h1><a href="http://nearform.com" style="width: 20%"><img src="./images/nearform.svg"></a><br>
+        <h3><a href="mailto:matteo.collina@nearform.com">matteo.collina@nearform.com</a></h3>
+        <h3><a href="http://twitter.com/matteocollina">@matteocollina</a></h3>
+        <h3><a href="http://www.nearform.com">www.nearform.com</a></h3>
+      </section>
+    </article>
+    <script src="build/build.js"></script>
+  </body>
+</html>
