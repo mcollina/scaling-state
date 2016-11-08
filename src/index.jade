@@ -83,7 +83,7 @@ html
           | as the load is shared
 
       section
-        h2 PUT AN IMAGE HERE
+        img(src="./images/no-caching.png", style="width: 90%")
 
       section
         img(src="./images/kaboom.gif")
@@ -216,10 +216,12 @@ html
           b build
 
         ul.bullet
-          li a Key Value store
+          li a key value store
           li a cache
           li a pub/sub system
           li real-time applications
+          li a discovery system
+          li a metadata store for microservices
           li ..or anything that requires distributed state!
 
       section(data-bespoke-backdrop='magic').trans
@@ -441,7 +443,7 @@ html
         pre
           code.language-javascript.
             const upring = UpRing({
-              base: '127.0.0.1:7979',
+              base: ['127.0.0.1:7979'],
               logLevel: 'debug',
               hashring: {
                 replicaPoints: 10,
@@ -456,7 +458,7 @@ html
             upring.add('ns:kv,cmd:put', function (req, reply) {
               db.set(req.key, req.value)
               /* the first argument is the error
-                 the second one is the result *
+                 the second one is the result */
               reply(null, { ok: true })
             })
 

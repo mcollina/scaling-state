@@ -3,7 +3,10 @@
   "version": "0.0.0",
   "dependencies": {
     "bespoke-run": "^1.0.1",
-    "bloomrun": "^2.3.0"
+    "bloomrun": "^2.3.0",
+    "docker-names": "^1.0.0",
+    "minimist": "^1.2.0",
+    "upring-kv": "^0.4.2"
   },
   "devDependencies": {
     "bespoke": "^1.0.0",
