@@ -22,8 +22,6 @@ html
             a(href="http://nearform.com")
               img(src="./images/nearform.svg")
 
-      section(data-bespoke-backdrop='node-desktop').trans
-
       section
         h2 MVC Architecture
         img(src='images/arch-mvc.png' style='height: 90%')
@@ -45,45 +43,25 @@ html
         img(src='images/arch-microservices.png' style='width: 90%')
 
       section()
-        h2 Microservices Characteristics
-        ul.bullet
-          li small in size
-          li communicate by messages
-          li bounded by contexts
-          li autonomously developed
-          li independently deployable
-          li decentralized
-
-      section()
         h2 Microservices are stateless
 
       section()
         // h2 Stateless Architecture
         img(src='images/arch-generic.png' style='height: 90%')
 
-      section
-        h2 Lifecyle
-        ol
-          li the load balancer receives request
-          li the load balancer routes the request to
-            br
-            b the least loaded server
-          li the first server calls several microservices..
-          li ideally load balancing so that the load is spread
-          li each of them fetch some data from a database
-          li each of them return the given data
-
       section()
+        h3 Round-Robin Load Balancing
         img(src='images/loadbalacing.png' style='width: 90%')
+
+      section
+        h3 Round-Robin Load Balancing
+        img(src="./images/no-caching.png", style="width: 120%")
 
       section
         h3 Every microservice must load the data
         h2 Any local caching is unfeasible
           br
           | as the load is shared
-
-      section
-        img(src="./images/no-caching.png", style="width: 90%")
 
       section
         img(src="./images/kaboom.gif")
@@ -106,13 +84,14 @@ html
           | us
 
       section
-        h2 Given a request referencing data X, we must always route it to peer Y.
-
-      section
+        h3 Data-aware Routing
         img(src="./images/reqhashing.png" style="width: 90%")
+        // Given a request referencing data X, we must always route it to peer Y.
+
 
       section
-        img(src="./images/reqhashing-with-gateway.png" style="width: 90%")
+        h3 Data-aware Routing
+        img(src="./images/reqhashing-with-gateway.png" style="width: 120%")
 
       section
         h2 How do we assign
@@ -145,9 +124,6 @@ html
 
       section
         img(src="./images/unfeasible.gif")
-
-      section
-        h2 Seems unfeasible. Or not?
 
       section(data-bespoke-backdrop='dragon-scroll').trans
         h1(style="color: white; padding-top: 50%") Secret Sauce(s)
@@ -199,17 +175,7 @@ html
       section
         h2 DEMO
 
-      section
-        h3
-          b UpRing&nbsp;
-          |is a building block for&nbsp;
-          b distributed systems
-
-      section
-        h3
-          b UpRing&nbsp;
-          |is a building block for&nbsp;
-          b infrastructure
+      section(data-bespoke-backdrop='upring-events').trans
 
       section
         h3 Upring is a framework to&nbsp;
@@ -243,107 +209,34 @@ html
               https://github.com/mcollina/upring-pubsub
 
       section
-        img(src="./images/penguins.gif")
+        h2 This presentation
+        ul.bullet
+          li
+            a(href="https://mcollina.github.io/scaling-state").
+              https://mcollina.github.io/scaling-state
+          li
+            a(href="https://github.com/mcollina/scaling-state").
+              https://github.com/mcollina/scaling-state
+
+      section
+        img(src='images/matteo.png' style="width: 95%")
+        h3
+          a(href='http://github.com/mcollina') http://github.com/mcollina
+
+      section
+        h1 Thanks!
+        a(href="http://nearform.com" style="width: 20%")
+          img(src="./images/nearform.svg")
+        br
+        h3 <a href="mailto:matteo.collina@nearform.com">matteo.collina@nearform.com</a>
+        h3 <a href="http://twitter.com/matteocollina">@matteocollina</a>
+        h3 <a href="http://www.nearform.com">www.nearform.com</a>
 
       section
         img(src='images/upring.svg' style='width: 30%')
         br
         br
-        h2 How to build a framework for building infrastructure components?
-
-      section(data-bespoke-backdrop='kay').transwhite
-        br
-        br
-        br
-        p
-          i.fa.fa-quote-left &nbsp;
-          | The key in making great and growable systems is much more
-          | to design how its modules communicate rather than what
-          | their internal properties and behaviors should be.
-          i.fa.fa-quote-right &nbsp;
-          | - Alan Key, father of OOP
-        .copyright
-          | Image by Marcin Wichary&nbsp;
-          a(href="http://creativecommons.org/licenses/by/3.0/deed.en_US")
-            img(src="images/cc_attribution.png")
-
-      section
-        h2 What is a message?
-        ul.bullet
-          li Maps
-          li Arrays
-          li Strings
-          li Numbers
-          li Binary data?
-          li Streams of data?
-
-      section
-        h2 The anatomy of a message
-        pre
-          code.language-javascript.
-            {
-              person:  {
-                name: 'Matteo'
-                surname: 'Collina'
-              }
-            }
-
-      section
-        h2 The anatomy of a recipient
-        pre
-          code.language-javascript.
-            recipient(message, function (err, result) {
-              console.log(err, result)
-            })
-
-        ul.bullet
-          li result is another message
-
-      section
-        h2 Node Callback Style
-        ul.bullet
-          li async by default
-          li no difference if wrapping a db, or a remote endpoint
-          li Promises are ok as well :)
-
-      section
-        h2 How to remote a function call?
-        ul.bullet
-          li how do we encode which function to call?
-          li truly multi transport from day zero
-          li we can store it in the message!
-
-      section
-        h2 Final message
-        pre
-          code.language-javascript.
-            {
-              role: 'person',
-              cmd: 'save'
-              person:  {
-                name: 'Matteo'
-                surname: 'Collina'
-              }
-            }
-
-      section
-        a(href="http://github.com/mcollina/bloomrun")
-          img(src="./images/bloomrun.png" style="width: 90%")
-
-      section
-        h2 Pattern Matching!
-        pre
-          code(data-bespoke-autorun).language-javascript.
-            var i = bloomrun()
-            i.add({ cmd: 'save' }, function save (arg, cb) {
-              alert('saving ' + JSON.stringify(arg))
-              cb(null, true) })
-
-            var msg = {
-              cmd: 'save',
-              person: { name: 'matteo' } }
-            i.lookup(msg)(msg, function (err, result) {
-              alert([err, result].join(' ')) })
+        h2 How does it work?
 
       section
         h2 Transport: tentacoli
@@ -424,6 +317,25 @@ html
                 }
               })
             }
+
+      section
+        a(href="http://github.com/mcollina/bloomrun")
+          img(src="./images/bloomrun.png" style="width: 90%")
+
+      section
+        h2 Pattern Matching!
+        pre
+          code(data-bespoke-autorun).language-javascript.
+            var i = bloomrun()
+            i.add({ cmd: 'save' }, function save (arg, cb) {
+              alert('saving ' + JSON.stringify(arg))
+              cb(null, true) })
+
+            var msg = {
+              cmd: 'save',
+              person: { name: 'matteo' } }
+            i.lookup(msg)(msg, function (err, result) {
+              alert([err, result].join(' ')) })
 
       section()
         img(src='images/upring.svg' style='width: 90%')
@@ -509,8 +421,6 @@ html
               reply(null, { value: db.get(req.key) })
             })
 
-      section(data-bespoke-backdrop='upring-events').trans
-
       section
         h2 Track
         pre
@@ -536,25 +446,6 @@ html
             upring.replica(key, function () {
               // now upring.allocateToMe(key) returns true
             })
-
-      section
-        h3 UpRing helps you&nbsp;
-        h2 Scaling State
-
-      section
-        h2 This presentation
-        ul.bullet
-          li
-            a(href="https://mcollina.github.io/scaling-state").
-              https://mcollina.github.io/scaling-state
-          li
-            a(href="https://github.com/mcollina/scaling-state").
-              https://github.com/mcollina/scaling-state
-
-      section
-        img(src='images/matteo.png' style="width: 95%")
-        h3
-          a(href='http://github.com/mcollina') http://github.com/mcollina
 
       section
         h1 Thanks!
