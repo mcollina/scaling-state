@@ -1,82 +1,22 @@
-# The Cost of Logging
+# Scaling State
 
-## How we realised 
+[**UpRing**][upring] provides application-level sharding, based on node.js streams. UpRing allocates some resources to a node, based on the hash of a `key`, and allows you to query the node using a request response pattern (based on JS objects) which can embed streams.
 
-## Why we did it
+[**UpRing**][upring] simplifies the implementation and deployment of a cluster of nodes using a gossip membership protocol and a [consistent hashing](https://en.wikipedia.org/wiki/Consistent_hashing) scheme (see [swim-hashring](https://github.com/mcollina/swim-hashring)). It uses [tentacoli](https://github.com/mcollina/tentacoli) as a transport layer.
 
-* talk about NAP 
-* Prior to pino, options weren't great
+## View slides locally
 
-## Logging is hard
+First, ensure you have the following installed:
 
-* Don't roll your own logger!
-* Performance wise
-* Architecturally
-* Noise filtering
+1. [Node.js](http://nodejs.org)
+2. [Bower](http://bower.io): `$ npm install -g bower`
+3. [Gulp](http://gulpjs.com): `$ npm install -g gulp`
 
-## Adapters of adapters of adapters
+Then, install dependencies and run the preview server:
 
-* Too many layers
-* Too much complexity
-* To high a cost of performance
+```bash
+$ npm install && bower install
+$ gulp serve
+```
 
-## Newline Delimited JSON
-
-* Everyone knows how to work with JSON
-* It has become the logging standard
-
-## Introducing Pino
-
-* High speed logging - 10000 logs in 250ms
-* Bunyan compatible interface
-* Faster than other JSON loggers (winston, bunyan)
-* Faster even, then non-JSON low-feature loggers (mithril, debug)
-
-
-## Why Pino is fast
-
-* not calling JSON.stringify
-* flatstr
-* fast-safe-stringify
-* quick-format
-
-## Making Pino even faster
-
-* Extreme mode
-* 10000 logs in 100ms
-* 4k batching
-
-## How we did it
-
-* 0x
-* tracing
-* experience
-* use common modules, then rewrite when they become bottleneck  
-
-## Pino Philosophy
-
-* Pino provides both high speed logging *and* recommends an approach to logging related actions
-* Log rotation
-* Transports
-* Post-formatting (date, spacing, etc.)
-
-## Server integration
-
-* hapi-pino (code example)
-* express-pino-logger (code example)
-* restify-pino-logger (code example)
-* koa-pino-logger (code example)
-* pino-http (code example)
-
-## ELK / Cloudwatch integration
-
-* todo
-
-## Ecosystem impact
-
-* usage is growing
-* apps/processes are speeding up essentially for free
-* inspiring other projects (rvagg and bole)
-* knowledge osmosis - approaches in pino and tools used for pino are being used in other projects (fast-safe-stringify hapi etc.)
-
-
+[upring]: https://github.com/mcollina/upring

@@ -22,29 +22,6 @@ html
             a(href="http://nearform.com")
               img(src="./images/nearform.svg")
 
-      section
-        h2 MVC Architecture
-        img(src='images/arch-mvc.png' style='height: 90%')
-
-      section(data-bespoke-backdrop='monolith').trans
-
-      section()
-        h2 Modules Architecture
-        img(src='images/arch-modules.png' style='width: 90%')
-
-      section()
-        h2 Services Architecture
-        img(src='images/arch-services.png' style='height: 90%')
-
-      section(data-bespoke-backdrop='stonehenge').trans
-
-      section()
-        h2 Microservices Architecture
-        img(src='images/arch-microservices.png' style='width: 90%')
-
-      section()
-        h2 Microservices are stateless
-
       section()
         // h2 Stateless Architecture
         img(src='images/arch-generic.png' style='height: 90%')
@@ -58,59 +35,21 @@ html
         img(src="./images/no-caching.png", style="width: 120%")
 
       section
-        h3 Every microservice must load the data
         h2 Any local caching is unfeasible
           br
           | as the load is shared
 
       section
-        img(src="./images/kaboom.gif")
-
-      section()
-        h2(style="text-decoration: line-through;") Microservices are stateless
-
-      section(data-bespoke-backdrop='lamp').trans
-        h1(style="color: white; margin-left: -10%; margin-right: auto; width: 10%; text-align: left; padding-bottom: 5%")
-          | Idea
-
-      section(data-bespoke-backdrop='lamp').trans
-        h2(style="color: white; margin-left: auto; margin-right: 0%; width: 30%; text-align: right; padding-bottom: 5%")
-          | Let's write <u><i>stateful</i></u> services!
-
-      section
-        h2 How do we know where the state lives?
-        h3 Load balancing with round-robin works&nbsp;
-          b against&nbsp;
-          | us
-
-      section
-        h3 Data-aware Routing
+        h3 Application-Level Sharding
         img(src="./images/reqhashing.png" style="width: 90%")
         // Given a request referencing data X, we must always route it to peer Y.
 
-
       section
-        h3 Data-aware Routing
-        img(src="./images/reqhashing-with-gateway.png" style="width: 120%")
-
-      section
-        h2 How do we assign
-          br
-          |users to servers?
-
-      section
-        h2 Application-level Sharding
-        img(src='images/sharding.png' style='height: 90%')
+        h3 How do we assign users to servers?
+        img(src='images/sharding.png' style='height: 80%')
 
       section
         h2 What if the topology changes?
-
-      section
-        h2
-          br
-          |Every peer must know every other peer:
-          br
-          | n * (n - 1) connections
 
       section
         h2 Failure detection
@@ -118,12 +57,18 @@ html
         h2 by heartbeat
 
       section
-        h2 Every peer receives
-          br
-          | n - 1 heartbeats in any interval
+        img(src="./images/unfeasible.gif")
 
       section
-        img(src="./images/unfeasible.gif")
+        h2 ..or is it?
+
+      section()
+        img(src='images/upring.svg' style='width: 90%')
+
+      section
+        h2 DEMO
+
+      section(data-bespoke-backdrop='magic').trans
 
       section(data-bespoke-backdrop='dragon-scroll').trans
         h1(style="color: white; padding-top: 50%") Secret Sauce(s)
@@ -153,10 +98,6 @@ html
             | embership protocol
 
       section(data-bespoke-backdrop='lamp').trans
-        h1(style="color: white; margin-left: -10%; margin-right: auto; width: 10%; text-align: left; padding-bottom: 5%")
-          | Idea
-
-      section(data-bespoke-backdrop='lamp').trans
         h3(style="color: white; margin-left: auto; margin-right: 0%; width: 30%; text-align: right; padding-bottom: 5%")
           | Let's organize our peers in a <b>consistent hashring</b>,
           | using <b>SWIM</b> to detect failures
@@ -164,18 +105,99 @@ html
       section(data-bespoke-backdrop='magic').trans
 
       section()
-        img(src='images/upring.svg' style='width: 90%')
-
-      section()
         img(src='images/hashring-sharding.png' style='height: 90%')
 
-      section
-        img(src='images/control.png' style='height: 90%')
-
-      section
-        h2 DEMO
-
       section(data-bespoke-backdrop='upring-events').trans
+
+      section
+        h2 API
+
+      section
+        h2 Starting upring
+        pre
+          code.language-javascript.
+            const upring = UpRing({
+              base: ['127.0.0.1:7979'],
+              logLevel: 'debug',
+              hashring: {
+                replicaPoints: 10,
+                joinTimeout: 200
+              }
+            })
+
+      section
+        h2 Adding patterns
+        pre
+          code.language-javascript.
+            upring.add('ns:kv,cmd:put', function (req, reply) {
+              db.set(req.key, req.value)
+              /* the first argument is the error
+                 the second one is the result */
+              reply(null, { ok: true })
+            })
+
+      section
+        h2 Send requests
+        pre
+          code.language-javascript.
+            upring.request({
+              ns: 'kv',
+              cmd: 'get',
+              key: 'hello'
+            }, console.log)
+
+      section
+        h2 Do live updates 1/2
+        pre
+          code.language-javascript.
+            upring.add('ns:kv,cmd:live', function (req, reply) {
+              const updates = new Readable({
+                objectMode: true,
+                read: () => {}
+              })
+              // call push whenever you want to send data
+              // se the full Readable API at nodejs.org
+              updates.push({ hello: 'world' })
+              reply(null, { streams: { updates } })
+            })
+
+      section
+        h2 Do live updates 2/2
+        pre
+          code.language-javascript.
+            upring.request({
+              ns: 'kv',
+              cmd: 'get',
+              key: 'hello'
+            }, function (err, res) {
+              res.streams.updates.on('data', console.log)
+            })
+
+      section
+        h2 Track
+        pre
+          code.language-javascript.
+            /* call upring.track(key) if you are responsible
+               for that key, i.e. if upring.allocatedToMe(key)
+               returns true */
+            const tracker = upring.track(key, { replica: true })
+            tracker.on('replica', function (peer) {
+              console.log('new replica', peer)
+            })
+            tracker.on('move', function (peer) {
+              console.log('moved to', peer)
+            })
+
+      section
+        h2 Replica
+        pre
+          code.language-javascript.
+            /* call upring.replica(key, cb) if you are not responsible
+               for that key, i.e. if upring.allocatedToMe(key)
+               returns false */
+            upring.replica(key, function () {
+              // now upring.allocateToMe(key) returns true
+            })
 
       section
         h3 Upring is a framework to&nbsp;
@@ -189,8 +211,6 @@ html
           li a discovery system
           li a metadata store for microservices
           li ..or anything that requires distributed state!
-
-      section(data-bespoke-backdrop='magic').trans
 
       section
         h2 Links
@@ -336,116 +356,6 @@ html
               person: { name: 'matteo' } }
             i.lookup(msg)(msg, function (err, result) {
               alert([err, result].join(' ')) })
-
-      section()
-        img(src='images/upring.svg' style='width: 90%')
-
-      section
-        h2 API
-        ul.bullet
-          li starting upring
-          li add some patterns
-          li send requests
-          li do live updates
-          li events
-          li track and replica
-
-      section
-        h2 Starting upring
-        pre
-          code.language-javascript.
-            const upring = UpRing({
-              base: ['127.0.0.1:7979'],
-              logLevel: 'debug',
-              hashring: {
-                replicaPoints: 10,
-                joinTimeout: 200
-              }
-            })
-
-      section
-        h2 Adding patterns 1/2
-        pre
-          code.language-javascript.
-            upring.add('ns:kv,cmd:put', function (req, reply) {
-              db.set(req.key, req.value)
-              /* the first argument is the error
-                 the second one is the result */
-              reply(null, { ok: true })
-            })
-
-      section
-        h2 Send requests
-        pre
-          code.language-javascript.
-            upring.request({
-              ns: 'kv',
-              cmd: 'get',
-              key: 'hello'
-            }, console.log)
-
-      section
-        h2 Do live updates 1/2
-        pre
-          code.language-javascript.
-            upring.add('ns:kv,cmd:live', function (req, reply) {
-              const updates = new Readable({
-                objectMode: true,
-                read: () => {}
-              })
-              // call push whenever you want to send data
-              // se the full Readable API at nodejs.org
-              updates.push({ hello: 'world' })
-              reply(null, { streams: { updates } })
-            })
-
-      section
-        h2 Do live updates 2/2
-        pre
-          code.language-javascript.
-            upring.request({
-              ns: 'kv',
-              cmd: 'get',
-              key: 'hello'
-            }, function (err, res) {
-              res.streams.updates.on('data', console.log)
-            })
-
-      section
-        h2 Adding patterns 2/2
-        pre
-          code.language-javascript.
-            upring.add('ns:kv,cmd:get', function (req, reply) {
-              /* the first argument is the error
-                 the second one is the result */
-              reply(null, { value: db.get(req.key) })
-            })
-
-      section
-        h2 Track
-        pre
-          code.language-javascript.
-            /* call upring.track(key) if you are responsible
-               for that key, i.e. if upring.allocatedToMe(key)
-               returns true */
-            const tracker = upring.track(key, { replica: true })
-            tracker.on('replica', function (peer) {
-              console.log('new replica', peer)
-            })
-            tracker.on('move', function (peer) {
-              console.log('moved to', peer)
-            })
-
-      section
-        h2 Replica
-        pre
-          code.language-javascript.
-            /* call upring.replica(key, cb) if you are not responsible
-               for that key, i.e. if upring.allocatedToMe(key)
-               returns false */
-            upring.replica(key, function () {
-              // now upring.allocateToMe(key) returns true
-            })
 
       section
         h1 Thanks!
