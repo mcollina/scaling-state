@@ -3,7 +3,7 @@ html
   head
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
-    title Scaling State
+    title Swimming in the MicroServices Ocean
 
     link(rel='stylesheet', type='text/css', href='build/build.css')
 
@@ -11,9 +11,9 @@ html
 
     article
 
-      section(data-bespoke-backdrop='black').trans
+      section(data-bespoke-backdrop='ocean').trans
         div(style='text-align: left; margin-top: -2em; color: white')
-          h1 Scaling State
+          h1 Swimming in the MicroServices Ocean
           h3(style='color: white') by&nbsp;
             a(style="display:inline-block;margin-left: -.03em; color: white",href="http://twitter.com/matteocollina") @matteocollina
 
@@ -22,9 +22,19 @@ html
             a(href="http://nearform.com")
               img(src="./images/nearform.svg")
 
+      section(data-bespoke-backdrop='ocean').transwhite
+        img(src="images/codemotion.png" style="width: 90%")
+
+      section(data-bespoke-backdrop='onceuponatime').trans
+
+      section(data-bespoke-backdrop='monolith2').trans
+
       section()
         // h2 Stateless Architecture
         img(src='images/arch-generic.png' style='height: 90%')
+
+      section
+        h2 How do you scale beyond one machine?
 
       section()
         h3 Round-Robin Load Balancing
@@ -35,9 +45,27 @@ html
         img(src="./images/no-caching.png", style="width: 120%")
 
       section
-        h2 Any local caching is unfeasible
+        h2 Any local state is unfeasible
           br
           | as the load is shared
+
+      section
+        h2 Divide et Impera
+        h3 (Philip of Macedonia)
+
+      section
+        h2 Microservices
+
+      section()
+        img(src='images/microservices.png' style='height: 90%')
+
+      section(data-bespoke-backdrop='hipster').trans
+
+      section
+        h2 Are stateless microservices resilient?
+
+      section
+        h2 Is there an alternative?
 
       section
         h3 Application-Level Sharding
@@ -51,10 +79,26 @@ html
       section
         h2 What if the topology changes?
 
+      section(data-bespoke-backdrop='books').transgray
+        h2(style="color: white") Service Discovery
+
+      section
+        img(src="./images/consul.png" style="width: 90%")
+
+      section
+        img(src="./images/etcd.svg" style="width: 90%")
+
+      section
+        h2 Do we really need another piece of infrastructure?
+
       section
         h2 Failure detection
         img(src="./images/heartbeat.png" style="width: 90%")
         h2 by heartbeat
+
+      section()
+        img(src='images/serf.png' style='height: 90%')
+        h2 But it's still more software runnning..
 
       section
         img(src="./images/unfeasible.gif")
@@ -67,9 +111,22 @@ html
 
       section
         h2 DEMO
+        a(href="https://github.com/mcollina/upring-demos") https://github.com/mcollina/upring-demos
         a(href="https://youtu.be/fLDOCwiKbbo") https://youtu.be/fLDOCwiKbbo
 
       section(data-bespoke-backdrop='magic').trans
+
+      section
+        h3 What happens when you read on UpRing?
+        img(src="./images/read.png" style="height: 90%")
+
+      section
+        h3 What happens when you write on UpRing?
+        img(src="./images/write.png" style="height: 90%")
+
+      section
+        h3 What happens when a peer dies?
+        img(src="./images/peer-dead.png" style="height: 90%")
 
       section(data-bespoke-backdrop='dragon-scroll').trans
         h1(style="color: white; padding-top: 50%") Secret Sauce(s)
@@ -107,6 +164,26 @@ html
 
       section()
         img(src='images/hashring-sharding.png' style='height: 90%')
+
+      section
+        h2 Differences between Raft and Paxos
+        ul.bullet(style="text-align: left")
+          li
+            | in UpRing, a leader is staticially decided based on the key
+            | so there are multiple leaders
+          li in Raft and Paxos, there is a single leader, elected by all the
+            | peers
+
+      section
+        h2 Differences between Raft and Paxos
+        ul.bullet(style="text-align: left")
+          li
+            | in UpRing, the stability of the cluster depends on the gossip
+            | convergence, every peer must know who else is available to hash
+            | the key
+          li
+            | in Raft and Paxos, you need at least 3 nodes to operate,
+            | but better use 5
 
       section(data-bespoke-backdrop='upring-events').trans
 
@@ -201,63 +278,10 @@ html
             })
 
       section
-        h3 Upring is a framework to&nbsp;
-          b build
-
-        ul.bullet
-          li a key value store
-          li a cache
-          li a pub/sub system
-          li real-time applications
-          li a discovery system
-          li a metadata store for microservices
-          li ..or anything that requires distributed state!
-
-      section
-        h2 Links
-        ul.bullet
-          li
-            a(href="https://github.com/mcollina/upring").
-              https://github.com/mcollina/upring
-          li
-            a(href="https://github.com/mcollina/upring-kv").
-              https://github.com/mcollina/upring-kv
-          li
-            a(href="https://github.com/mcollina/upring-control").
-              https://github.com/mcollina/upring-control
-          li
-            a(href="https://github.com/mcollina/upring-pubsub").
-              https://github.com/mcollina/upring-pubsub
-
-      section
-        h2 This presentation
-        ul.bullet
-          li
-            a(href="https://mcollina.github.io/scaling-state").
-              https://mcollina.github.io/scaling-state
-          li
-            a(href="https://github.com/mcollina/scaling-state").
-              https://github.com/mcollina/scaling-state
-
-      section
-        img(src='images/matteo.png' style="width: 95%")
-        h3
-          a(href='http://github.com/mcollina') http://github.com/mcollina
-
-      section
-        h1 Thanks!
-        a(href="http://nearform.com" style="width: 20%")
-          img(src="./images/nearform.svg")
-        br
-        h3 <a href="mailto:matteo.collina@nearform.com">matteo.collina@nearform.com</a>
-        h3 <a href="http://twitter.com/matteocollina">@matteocollina</a>
-        h3 <a href="http://www.nearform.com">www.nearform.com</a>
-
-      section
         img(src='images/upring.svg' style='width: 30%')
         br
         br
-        h2 How does it work?
+        h2 Internals
 
       section
         h2 Transport: tentacoli
@@ -269,6 +293,7 @@ html
           li support sending binary streams
           li support sending object streams
           li works on top any binary stream
+          li multiplexed
 
       section
         pre
@@ -357,6 +382,51 @@ html
               person: { name: 'matteo' } }
             i.lookup(msg)(msg, function (err, result) {
               alert([err, result].join(' ')) })
+
+      section
+        h3 Upring is a framework to&nbsp;
+          b build
+
+        ul.bullet
+          li a key value store
+          li a cache
+          li a pub/sub system
+          li real-time applications
+          li a discovery system
+          li a metadata store for microservices
+          li ..or anything that requires distributed state!
+
+      section
+        h2 Links
+        ul.bullet
+          li
+            a(href="https://github.com/mcollina/upring").
+              https://github.com/mcollina/upring
+          li
+            a(href="https://github.com/mcollina/upring-kv").
+              https://github.com/mcollina/upring-kv
+          li
+            a(href="https://github.com/mcollina/upring-control").
+              https://github.com/mcollina/upring-control
+          li
+            a(href="https://github.com/mcollina/upring-pubsub").
+              https://github.com/mcollina/upring-pubsub
+
+
+      // section
+      //   h2 This presentation
+      //   ul.bullet
+      //     li
+      //       a(href="https://mcollina.github.io/scaling-state").
+      //         https://mcollina.github.io/scaling-state
+      //     li
+      //       a(href="https://github.com/mcollina/scaling-state").
+      //         https://github.com/mcollina/scaling-state
+
+      section
+        img(src='images/matteo.png' style="width: 95%")
+        h3
+          a(href='http://github.com/mcollina') http://github.com/mcollina
 
       section
         h1 Thanks!
